@@ -1078,3 +1078,205 @@ a:focus-visible, button:focus-visible{
     *{ animation:none !important; transition:none !important; scroll-behavior:auto !important; }
     .reveal{ opacity:1; transform:none; }
 }
+
+
+/* Dark-Mode-Button im mobilen Menü (unten) */
+.nav-theme{ display:none; }
+
+@media(max-width:991px){
+    .nav-theme{
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        margin-top:25px;
+        padding-top:20px;
+        border-top:1px solid var(--border);
+        font-weight:600;
+        color:var(--text);
+    }
+}
+
+
+/* Bilder statt Platzhalter (img/test.jpg) */
+.placeholder{
+    position:relative;
+    overflow:hidden;
+    filter:none;
+    padding:0;
+    font-size:0;
+}
+.placeholder img{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+    transition:transform .6s ease;
+}
+.portfolio-item:hover .placeholder img,
+.service-card:hover .placeholder img{
+    transform:scale(1.06);
+}
+
+
+/* =====================================================
+BILD-OVERLAY (Leistungen + Referenzen)
+===================================================== */
+
+.img-overlay{
+    position:absolute;
+    inset:0;
+    z-index:2;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-end;
+    align-items:flex-start;
+    gap:10px;
+    padding:24px;
+    text-align:left;
+    text-transform:none;
+    letter-spacing:normal;
+    font-size:16px;
+    font-weight:400;
+    line-height:1.5;
+    color:#fff;
+    background:rgba(15,17,21,.55);
+    backdrop-filter:blur(8px);
+    -webkit-backdrop-filter:blur(8px);
+    transform:translateY(101%);
+    transition:transform .5s cubic-bezier(.22,1,.36,1);
+}
+
+.ov-title{
+    font-size:24px;
+    font-weight:800;
+    line-height:1.2;
+}
+
+.ov-text{
+    font-size:15px;
+    opacity:.92;
+}
+
+.overlay-btn{
+    margin-top:6px;
+    padding:11px 22px;
+    border-radius:12px;
+    background:var(--primary);
+    color:#fff;
+    font-size:15px;
+    font-weight:700;
+    transition:.3s;
+}
+
+.overlay-btn:hover{
+    background:var(--primary-hover);
+    transform:translateY(-2px);
+}
+
+@media (hover:hover){
+    .service-card:hover .img-overlay,
+    .portfolio-item:hover .img-overlay{
+        transform:translateY(0);
+    }
+}
+
+.service-card.is-open .img-overlay,
+.portfolio-item.is-open .img-overlay,
+.service-card:focus-within .img-overlay,
+.portfolio-item:focus-within .img-overlay{
+    transform:translateY(0);
+}
+
+@media(max-width:768px){
+    .img-overlay{ padding:20px; gap:8px; }
+    .ov-title{ font-size:21px; }
+}
+
+
+/* =====================================================
+OVERLAY v2: weich, langsamer, Markenfarbe
+===================================================== */
+
+.img-overlay{
+    background:linear-gradient(to top, rgba(104,9,29,.96) 0%, rgba(163,21,47,.90) 100%);
+    backdrop-filter:none;
+    -webkit-backdrop-filter:none;
+    transform:translate3d(0,101%,0);
+    transition:transform .8s cubic-bezier(.22,.9,.28,1);
+    will-change:transform;
+    backface-visibility:hidden;
+}
+
+body.dark .img-overlay{
+    background:linear-gradient(to top, rgba(60,6,17,.97) 0%, rgba(124,16,36,.92) 100%);
+}
+
+/* Inhalt blendet nacheinander ein */
+.img-overlay > *{
+    opacity:0;
+    transform:translate3d(0,18px,0);
+    transition:opacity .5s ease, transform .7s cubic-bezier(.22,.9,.28,1);
+}
+
+@media (hover:hover){
+    .service-card:hover .img-overlay,
+    .portfolio-item:hover .img-overlay{
+        transform:translate3d(0,0,0);
+    }
+    .service-card:hover .img-overlay > *,
+    .portfolio-item:hover .img-overlay > *{
+        opacity:1;
+        transform:translate3d(0,0,0);
+    }
+}
+
+.service-card.is-open .img-overlay,
+.portfolio-item.is-open .img-overlay,
+.service-card:focus-within .img-overlay,
+.portfolio-item:focus-within .img-overlay{
+    transform:translate3d(0,0,0);
+}
+
+.service-card.is-open .img-overlay > *,
+.portfolio-item.is-open .img-overlay > *,
+.service-card:focus-within .img-overlay > *,
+.portfolio-item:focus-within .img-overlay > *{
+    opacity:1;
+    transform:translate3d(0,0,0);
+}
+
+.img-overlay > :nth-child(1){ transition-delay:.18s; }
+.img-overlay > :nth-child(2){ transition-delay:.28s; }
+.img-overlay > :nth-child(3){ transition-delay:.38s; }
+
+/* Beim Zurückfahren sofort, ohne Verzögerung */
+.service-card:not(:hover):not(.is-open):not(:focus-within) .img-overlay > *,
+.portfolio-item:not(:hover):not(.is-open):not(:focus-within) .img-overlay > *{
+    transition-delay:0s;
+}
+
+.overlay-btn{
+    background:#fff;
+    color:var(--primary);
+}
+
+.overlay-btn:hover{
+    background:#f4e6e9;
+    box-shadow:0 8px 20px rgba(0,0,0,.25);
+}
+
+/* Weniger gleichzeitige Animationen = weniger Ruckeln */
+.service-card .placeholder img,
+.portfolio-item .placeholder img{
+    transition:none;
+}
+.service-card:hover .placeholder img,
+.portfolio-item:hover .placeholder img{
+    transform:none;
+}
+
+.portfolio-item{
+    transition:transform .7s cubic-bezier(.22,.9,.28,1);
+}

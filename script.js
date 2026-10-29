@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initLoader();
     initTheme();
     initMobileMenu();
+    initThemeToggleMove();
     initStickyNavbar();
     initRevealAnimations();
     initCounters();
@@ -20,6 +21,8 @@ document.addEventListener("DOMContentLoaded", () => {
     initServiceTilt();
     initRotator();
     initHeroGlow();
+    initCardOverlay();
+    initTiltSmooth();
 
 });
 
@@ -123,6 +126,34 @@ function initMobileMenu() {
             });
 
         });
+
+}
+
+/* =====================================================
+THEME TOGGLE -> MOBILE MENU (BOTTOM)
+===================================================== */
+
+function initThemeToggleMove() {
+
+    const btn = document.getElementById("theme-toggle");
+    const nav = document.getElementById("nav-menu");
+    const actions = document.querySelector(".nav-actions");
+    if (!btn || !nav || !actions) return;
+
+    const holder = document.createElement("div");
+    holder.className = "nav-theme";
+    holder.innerHTML = "<span>Design wechseln</span>";
+    nav.appendChild(holder);
+
+    const mq = window.matchMedia("(max-width: 991px)");
+
+    const place = () => {
+        if (mq.matches) holder.appendChild(btn);
+        else actions.insertBefore(btn, actions.firstChild);
+    };
+
+    place();
+    mq.addEventListener("change", place);
 
 }
 
@@ -598,6 +629,60 @@ function initServiceTilt() {
 
             }
         );
+
+    });
+
+}
+
+/* =====================================================
+CARD OVERLAY (HOVER / TAP)
+===================================================== */
+
+function initCardOverlay() {
+
+    const cards = document.querySelectorAll(".service-card, .portfolio-item");
+    const touch = window.matchMedia("(hover: none)");
+
+    cards.forEach(card => {
+
+        card.addEventListener("click", e => {
+
+            if (!touch.matches) return;
+            if (e.target.closest(".overlay-btn")) return;
+
+            const wasOpen = card.classList.contains("is-open");
+
+            cards.forEach(c => c.classList.remove("is-open"));
+
+            if (!wasOpen) card.classList.add("is-open");
+
+            e.stopPropagation();
+
+        });
+
+    });
+
+    document.addEventListener("click", () => {
+        cards.forEach(c => c.classList.remove("is-open"));
+    });
+
+}
+
+/* =====================================================
+SMOOTH TILT (kein Ruckeln mit Overlay)
+===================================================== */
+
+function initTiltSmooth() {
+
+    document.querySelectorAll(".service-card").forEach(card => {
+
+        card.addEventListener("mousemove", () => {
+            card.style.transition = "transform .15s ease-out";
+        });
+
+        card.addEventListener("mouseleave", () => {
+            card.style.transition = "transform .6s cubic-bezier(.22,.9,.28,1)";
+        });
 
     });
 
